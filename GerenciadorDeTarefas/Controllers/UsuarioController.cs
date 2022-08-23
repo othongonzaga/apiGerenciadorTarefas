@@ -39,7 +39,7 @@ namespace GerenciadorDeTarefas.Controllers
 
                 if(string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Senha.Length > 4 && Regex.IsMatch(usuario.Senha, "[a-zA-Z0-9]+", RegexOptions.IgnoreCase))
                 {
-                    erros.Add("Email inválido");
+                    erros.Add("Senha inválida");
                 }
 
                 Regex regex = new Regex(@"^([\w\.\-\+\d]+)@([\w\-]+)((\.(\w){2,4})+)$");

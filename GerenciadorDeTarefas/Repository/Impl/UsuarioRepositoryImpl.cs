@@ -1,4 +1,5 @@
 ﻿using GerenciadorDeTarefas.Models;
+using System.Linq;
 
 namespace GerenciadorDeTarefas.Repository.Impl
 {
@@ -9,6 +10,12 @@ namespace GerenciadorDeTarefas.Repository.Impl
         {
             _contexto = contexto;
         }
+
+        public bool ExisteUsuarioPeloEmail(string email)
+        {
+           return _contexto.Usuario.Any(usuario => usuario.Email.ToLower() == email.ToLower() );
+        }
+
         public void Salvar(Usuario usuario)
         {
             _contexto.Usuario.Add(usuario);

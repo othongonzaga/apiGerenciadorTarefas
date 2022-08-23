@@ -48,6 +48,11 @@ namespace GerenciadorDeTarefas.Controllers
                     erros.Add("Email inválido");
                 }
 
+                if(_usuarioRepository.ExisteUsuarioPeloEmail(usuario.Email))
+                {
+                    erros.Add("Já existe uma conta com o email inválido");
+                }
+
                 if(erros.Count > 0)
                 {
                     return BadRequest(new ErroRespostaDto()
@@ -56,6 +61,7 @@ namespace GerenciadorDeTarefas.Controllers
                         Erros = erros
                     });
                 }
+                usuario.Email = usuario.Email.ToLower();
                 usuario.Senha = MD5Utils.GerarHashMD5(usuario.Senha);
                 _usuarioRepository.Salvar(usuario);
 

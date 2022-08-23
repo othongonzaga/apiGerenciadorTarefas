@@ -1,6 +1,7 @@
 ﻿using GerenciadorDeTarefas.Dtos;
 using GerenciadorDeTarefas.Models;
 using GerenciadorDeTarefas.Repository;
+using GerenciadorDeTarefas.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,7 @@ namespace GerenciadorDeTarefas.Controllers
                         Erros = erros
                     });
                 }
+                usuario.Senha = MD5Utils.GerarHashMD5(usuario.Senha);
                 _usuarioRepository.Salvar(usuario);
 
                 return Ok(new {msg = "Usuário criado com sucesso!"});

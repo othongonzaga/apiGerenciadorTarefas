@@ -1,4 +1,5 @@
 ﻿using GerenciadorDeTarefas.Models;
+using System.Linq;
 
 namespace GerenciadorDeTarefas.Repository.Impl
 {
@@ -14,6 +15,17 @@ namespace GerenciadorDeTarefas.Repository.Impl
         public void AdicionarTarefa(Tarefa tarefa)
         {
             _contexto.Tarefa.Add(tarefa);
+            _contexto.SaveChanges();
+        }
+
+        public Tarefa GetById(int idTarefa)
+        {
+            return _contexto.Tarefa.FirstOrDefault(tarefa => tarefa.Id == idTarefa);
+        }
+
+        public void RemoverTarefa(Tarefa tarefa)
+        {
+            _contexto.Tarefa.Remove(tarefa);
             _contexto.SaveChanges();
         }
     }

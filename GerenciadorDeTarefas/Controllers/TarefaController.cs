@@ -72,5 +72,45 @@ namespace GerenciadorDeTarefas.Controllers
                 });
             }
         }
+
+        [HttpDelete("{idTarefa}")]
+        public IActionResult DeletarTarefa(int idTarefa)
+        {
+            try
+            {
+                var usuario = ReadToken();
+                if(usuario == null || idTarefa <= 0)
+                {
+                    return BadRequest(new ErroRespostaDto()
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erro = "Usuário ou tarefa inválidos"
+                    });
+                }
+
+                var tarefa = _trefaRepository.GetById(idTarefa);
+
+                if(tarefa == null || tarefa.IdUsuario != usuario.Id)
+                {
+                    return BadRequest(new ErroRespostaDto()
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erro = "Tarefa não encontrada"
+                    });
+                }
+
+                _trefaRepository.RemoverTarefa(tarefa);
+                return Ok(new {msg = "Tarefa deletada com sucesso!"});
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Ocorreu erro ao deletar tarefa", e);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDto()
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Erro = "Ocorreu erro ao deletar tarefa, tente novamente!"
+                });
+            }
+        }
     }
 }

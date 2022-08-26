@@ -30,7 +30,7 @@ namespace GerenciadorDeTarefas.Controllers
             {
                 var usuario = ReadToken();
                 var erros = new List<string>();
-                if(tarefa == null || usuario == null)
+                if (tarefa == null || usuario == null)
                 {
                     erros.Add("Favor informar tarefa ou usuário");
                 }
@@ -41,7 +41,7 @@ namespace GerenciadorDeTarefas.Controllers
                         erros.Add("Por favor, informar um nome!");
                     }
 
-                    if(tarefa.DataPrevistaConclusao == DateTime.MinValue || tarefa.DataPrevistaConclusao < DateTime.Now)
+                    if (tarefa.DataPrevistaConclusao == DateTime.MinValue || tarefa.DataPrevistaConclusao < DateTime.Now)
                     {
                         erros.Add("Data de previsão não pode ser menor que hoje");
                     }
@@ -62,7 +62,7 @@ namespace GerenciadorDeTarefas.Controllers
 
                 return Ok(new { msg = "Tarefa criada com sucesso!" });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError("Ocorreu erro ao adicionar tarefa", e);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDto()
@@ -79,7 +79,7 @@ namespace GerenciadorDeTarefas.Controllers
             try
             {
                 var usuario = ReadToken();
-                if(usuario == null || idTarefa <= 0)
+                if (usuario == null || idTarefa <= 0)
                 {
                     return BadRequest(new ErroRespostaDto()
                     {
@@ -90,7 +90,7 @@ namespace GerenciadorDeTarefas.Controllers
 
                 var tarefa = _tarefaRepository.GetById(idTarefa);
 
-                if(tarefa == null || tarefa.IdUsuario != usuario.Id)
+                if (tarefa == null || tarefa.IdUsuario != usuario.Id)
                 {
                     return BadRequest(new ErroRespostaDto()
                     {
@@ -100,9 +100,9 @@ namespace GerenciadorDeTarefas.Controllers
                 }
 
                 _tarefaRepository.RemoverTarefa(tarefa);
-                return Ok(new {msg = "Tarefa deletada com sucesso!"});
+                return Ok(new { msg = "Tarefa deletada com sucesso!" });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError("Ocorreu erro ao deletar tarefa", e);
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDto()
@@ -112,5 +112,81 @@ namespace GerenciadorDeTarefas.Controllers
                 });
             }
         }
+
+        [HttpPut("{idTarefa}")]
+        public IActionResult AtualizarTarefa([FromBody] Tarefa model, int idTarefa)
+        {
+            try
+            {
+                var usuario = ReadToken();
+                if (usuario == null || idTarefa <= 0)
+                {
+                    return BadRequest(new ErroRespostaDto()
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erro = "Usuário ou tarefa inválidos"
+                    });
+                }
+
+                var tarefa = _tarefaRepository.GetById(idTarefa);
+
+                if (tarefa == null || tarefa.IdUsuario != usuario.Id)
+                {
+                    return BadRequest(new ErroRespostaDto()
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erro = "Tarefa não encontrada"
+                    });
+                }
+
+                var erros = new List<string>();
+
+                if (model == null)
+                {
+                    erros.Add("Favor informar a tarefa ou usuário");
+                }
+                else if (!string.IsNullOrEmpty(model.Nome) && !string.IsNullOrWhiteSpace(model.Nome) && model.Nome.Count() < 4)
+                {
+                    erros.Add("Favor informar um nome válido");
+                }
+
+                if (erros.Count > 0)
+                {
+                    return BadRequest(new ErroRespostaDto()
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erros = erros
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(model.Nome))
+                {
+                    tarefa.Nome = model.Nome;
+                }
+
+                if (model.DataPrevistaConclusao != DateTime.MinValue)
+                {
+                    tarefa.DataPrevistaConclusao = model.DataPrevistaConclusao;
+                }
+
+                if (model.DataConclusao != null && model.DataConclusao != DateTime.MinValue)
+                {
+                    tarefa.DataConclusao = model.DataConclusao;
+                }
+
+
+                _tarefaRepository.AtualizarTarefa(tarefa);
+                return Ok(new { msg = "Tarefa atualizada com sucesso" });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Ocorreu erro ao atualizar tarefa", e);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDto()
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Erro = "Ocorreu erro ao atualizar tarefa, tente novamente!"
+                });
+            }
+        } 
     }
 }

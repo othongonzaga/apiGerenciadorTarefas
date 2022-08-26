@@ -7,5 +7,6 @@ namespace GerenciadorDeTarefas.Repository
         public void AdicionarTarefa(Tarefa tarefa);
         Tarefa GetById(int idTarefa);
         public void RemoverTarefa(Tarefa tarefa);
+        void AtualizarTarefa(Tarefa tarefa);
     }
 }

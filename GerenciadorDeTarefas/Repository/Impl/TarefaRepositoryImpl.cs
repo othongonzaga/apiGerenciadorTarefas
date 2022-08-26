@@ -18,6 +18,13 @@ namespace GerenciadorDeTarefas.Repository.Impl
             _contexto.SaveChanges();
         }
 
+        public void AtualizarTarefa(Tarefa tarefa)
+        {
+            _contexto.Entry(tarefa).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _contexto.SaveChanges();
+            _contexto.Entry(tarefa).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+        }
+
         public Tarefa GetById(int idTarefa)
         {
             return _contexto.Tarefa.FirstOrDefault(tarefa => tarefa.Id == idTarefa);

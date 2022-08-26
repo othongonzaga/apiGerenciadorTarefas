@@ -15,12 +15,12 @@ namespace GerenciadorDeTarefas.Controllers
     public class TarefaController : BaseController
     {
         private readonly ILogger<TarefaController> _logger;
-        private readonly ITarefaRepository _trefaRepository;
+        private readonly ITarefaRepository _tarefaRepository;
 
         public TarefaController(ILogger<TarefaController> logger, IUsuarioRepository usuarioRepository, ITarefaRepository tarefaRepository) : base(usuarioRepository)
         {
             _logger = logger;
-            _trefaRepository = tarefaRepository;
+            _tarefaRepository = tarefaRepository;
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace GerenciadorDeTarefas.Controllers
 
                 tarefa.IdUsuario = usuario.Id;
                 tarefa.DataConclusao = null;
-                _trefaRepository.AdicionarTarefa(tarefa);
+                _tarefaRepository.AdicionarTarefa(tarefa);
 
                 return Ok(new { msg = "Tarefa criada com sucesso!" });
             }
@@ -88,7 +88,7 @@ namespace GerenciadorDeTarefas.Controllers
                     });
                 }
 
-                var tarefa = _trefaRepository.GetById(idTarefa);
+                var tarefa = _tarefaRepository.GetById(idTarefa);
 
                 if(tarefa == null || tarefa.IdUsuario != usuario.Id)
                 {
@@ -99,7 +99,7 @@ namespace GerenciadorDeTarefas.Controllers
                     });
                 }
 
-                _trefaRepository.RemoverTarefa(tarefa);
+                _tarefaRepository.RemoverTarefa(tarefa);
                 return Ok(new {msg = "Tarefa deletada com sucesso!"});
             }
             catch(Exception e)

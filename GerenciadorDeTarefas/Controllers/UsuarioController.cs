@@ -30,12 +30,12 @@ namespace GerenciadorDeTarefas.Controllers
             try
             {
                 var erros = new List<string>();
-                if(string.IsNullOrEmpty(usuario.Nome) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Nome.Length > 2)
+                if(string.IsNullOrEmpty(usuario.Nome) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Nome.Length < 2)
                 {
                     erros.Add("Nome inválido");
                 }
 
-                if(string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Senha.Length > 4 && Regex.IsMatch(usuario.Senha, "[a-zA-Z0-9]+", RegexOptions.IgnoreCase))
+                if(string.IsNullOrEmpty(usuario.Senha) || string.IsNullOrWhiteSpace(usuario.Senha) || usuario.Senha.Length < 2 && Regex.IsMatch(usuario.Senha, "[a-zA-Z0-9]+", RegexOptions.IgnoreCase))
                 {
                     erros.Add("Senha inválida");
                 }

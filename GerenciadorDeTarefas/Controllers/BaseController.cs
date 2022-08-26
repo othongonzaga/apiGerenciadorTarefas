@@ -2,6 +2,7 @@
 using GerenciadorDeTarefas.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -26,7 +27,7 @@ namespace GerenciadorDeTarefas.Controllers
                 return usuario;
             }
 
-            throw new UnauthorizedAccessExeption("");
+            throw new UnauthorizedAccessException("Token não informado ou inválido");
         }
     }
 }

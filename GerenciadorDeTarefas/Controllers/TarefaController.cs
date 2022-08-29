@@ -1,4 +1,5 @@
 ﻿using GerenciadorDeTarefas.Dtos;
+using GerenciadorDeTarefas.Enums;
 using GerenciadorDeTarefas.Models;
 using GerenciadorDeTarefas.Repository;
 using Microsoft.AspNetCore.Http;
@@ -185,6 +186,35 @@ namespace GerenciadorDeTarefas.Controllers
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Erro = "Ocorreu erro ao atualizar tarefa, tente novamente!"
+                });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ListarTarefasUsuario(DateTime? periodoDe, DateTime? periodoAte, StatusTarefaEnum status)
+        {
+            try
+            {
+                var usuario = ReadToken();
+                if(usuario == null)
+                {
+                    return BadRequest(new ErroRespostaDto
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Erro = "Usuário não informado"
+                    });
+                }
+
+                var resultado = _tarefaRepository.BuscarTarefas(usuario.Id, periodoDe, periodoAte, status);
+                return Ok(resultado);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Ocorreu erro ao listar tarefa", e);
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErroRespostaDto()
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Erro = "Ocorreu erro ao listar tarefa, tente novamente!"
                 });
             }
         } 

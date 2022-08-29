@@ -145,7 +145,7 @@ namespace GerenciadorDeTarefas.Controllers
                 {
                     erros.Add("Favor informar a tarefa ou usuário");
                 }
-                else if (!string.IsNullOrEmpty(model.Nome) && !string.IsNullOrWhiteSpace(model.Nome) && model.Nome.Count() < 4)
+                else if (!string.IsNullOrEmpty(model.Nome) && !string.IsNullOrWhiteSpace(model.Nome) && model.Nome.Count() < 3)
                 {
                     erros.Add("Favor informar um nome válido");
                 }
